@@ -1,8 +1,7 @@
 # IPC-Bench
 
-[![GitHub license](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square)](http://goldsborough.mit-license.org)
-
 A sample implementations and benchmarks for various inter-process-communication (IPC) methods on Linux and OS X.
+Furthermore, additional commonly used communication libraries that provide ipc functionality are benchmarked as well.
 
 ## Spectrum
 
@@ -84,12 +83,6 @@ Contributions are welcome, as long as they fit within the goal of this benchmark
 
 Just open an issues or send a pull request.
 
-## [License](http://goldsborough.mit-license.org)
+## License
 
-This project is released under the [MIT License](http://goldsborough.mit-license.org). For more information, see the LICENSE file.
-
-## Authors
-
-[Peter Goldsborough](http://goldsborough.me) + [cat](https://goo.gl/IpUmJn) :heart:
-
-Some maintenance by [Alexander van Renen](https://github.com/alexandervanrenen)
+This project is released under the MIT License.
