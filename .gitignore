@@ -100,5 +100,6 @@ output/
 .tags*
 .idea/*
 cmake-build-debug
+temp/*
 
 
