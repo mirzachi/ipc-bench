@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# dbus dependencies
+#sudo apt-get install libexpat-dev libsigc++-2.0-dev m4
+
 temp_build_dir="./temp/third_party/build"
 mkdir -p "${temp_build_dir}"
 

@@ -20,11 +20,22 @@ link_libraries(pthread)
 ## DEPENDENCIES
 ###########################################################
 
-find_package(PkgConfig REQUIRED)
+find_package(Threads REQUIRED)
 
 ## ZMQ
+find_package(ZeroMQ 4.3.3 EXACT REQUIRED CONFIG)
 
-pkg_check_modules(ZMQ libzmq)
+## nng
+find_package(nng 1.4.0 EXACT REQUIRED CONFIG)
+
+## nanomsg
+find_package(nanomsg 1.1.5 EXACT REQUIRED CONFIG)
+
+# Our required dependencies are libdbus and libsigc++
+find_package(PkgConfig REQUIRED)
+pkg_check_modules( dbus REQUIRED dbus-1>=1.3 )
+pkg_check_modules( sigc REQUIRED sigc++-2.0 )
+pkg_check_modules( dbus-cxx REQUIRED dbus-cxx-1.0 )
 
 ###########################################################
 ## SUBDIRECTORIES
@@ -47,4 +58,15 @@ endif()
 
 if (ZMQ_FOUND)
 	add_subdirectory(zeromq)
+	add_subdirectory(zeromq-sub)
+endif()
+
+if (nng_FOUND)
+	add_subdirectory(nng)
+	add_subdirectory(nng-sub)
+endif()
+
+if (nanomsg_FOUND)
+	add_subdirectory(libnanomsg)
+	add_subdirectory(libnanomsg-sub)
 endif()
