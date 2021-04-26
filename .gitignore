@@ -98,3 +98,7 @@ build/
 output/
 *.result
 .tags*
+.idea/*
+cmake-build-debug
+
+
