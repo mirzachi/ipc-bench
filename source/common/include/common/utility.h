@@ -24,7 +24,7 @@ struct timeval;
  *
  * \see terminate()
  */
-void throw(const char* message) __attribute__((noreturn));
+void throwError(const char* message) __attribute__((noreturn));
 
 /**
  * Prints a message to stderr and exits the program.

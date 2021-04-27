@@ -11,7 +11,7 @@
 
 #include "common/utility.h"
 
-void throw(const char* message) {
+void throwError(const char* message) {
 	perror(message);
 	exit(EXIT_FAILURE);
 }
@@ -38,7 +38,7 @@ int generate_key(const char* path) {
 void nsleep(int nanoseconds) {
 	struct timespec time = {0, nanoseconds};
 	if (nanosleep(&time, NULL) == -1) {
-		throw("Sleep was interrupted");
+		throwError("Sleep was interrupted");
 	}
 }
 
@@ -46,7 +46,7 @@ int current_milliseconds() {
 	struct timeval current_time;
 
 	if (gettimeofday(&current_time, NULL) == -1) {
-		throw("Error getting time");
+		throwError("Error getting time");
 	}
 
 	return timeval_to_milliseconds(&current_time);

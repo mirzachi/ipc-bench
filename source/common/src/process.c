@@ -22,7 +22,7 @@ pid_t start_process(char *argv[]) {
 		// Set group id of the children so that we
 		// can send around signals
 		if (setpgid(pid, parent_pid) == -1) {
-			throw("Could not set group id for child process");
+			throwError("Could not set group id for child process");
 		}
 		// Replace the current process with the command
 		// we want to execute (child or server)
@@ -31,7 +31,7 @@ pid_t start_process(char *argv[]) {
 		// command path has to be included as well
 		// (that's why argv[0] first)
 		if (execv(argv[0], argv) == -1) {
-			throw("Error opening child process");
+			throwError("Error opening child process");
 		}
 	}
 

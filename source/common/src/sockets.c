@@ -25,7 +25,7 @@ int socket_buffer_size(int socket_fd, Direction direction) {
 	// clang-format on
 
 	if (return_code == -1) {
-		throw("Error getting buffer size");
+		throwError("Error getting buffer size");
 	}
 
 	return buffer_size;
@@ -47,7 +47,7 @@ timeval socket_timeout(int socket_fd, Direction direction) {
 	// clang-format on
 
 	if (return_code == -1) {
-		throw("Error getting socket timeout");
+		throwError("Error getting socket timeout");
 	}
 
 	return timeout;
@@ -82,7 +82,7 @@ void set_socket_buffer_size(int socket_fd, Direction direction) {
 	// clang-format on
 
 	if (return_code == -1) {
-		throw("Error setting socket buffer size");
+		throwError("Error setting socket buffer size");
 	}
 }
 
@@ -112,7 +112,7 @@ void set_socket_timeout(int socket_fd, timeval* timeout, Direction direction) {
 	// clang-format on
 
 	if (return_code == -1) {
-		throw("Error setting blocking timeout");
+		throwError("Error setting blocking timeout");
 	}
 }
 
@@ -159,7 +159,7 @@ int receive(int connection, void* buffer, int size, int busy_waiting) {
 int get_socket_flags(int socket_fd) {
 	int flags;
 	if ((flags = fcntl(socket_fd, F_GETFL)) == -1) {
-		throw("Error retrieving flags");
+		throwError("Error retrieving flags");
 	}
 
 	return flags;
@@ -167,7 +167,7 @@ int get_socket_flags(int socket_fd) {
 
 void set_socket_flags(int socket_fd, int flags) {
 	if ((flags = fcntl(socket_fd, F_SETFL, flags)) == -1) {
-		throw("Error setting flags");
+		throwError("Error setting flags");
 	}
 }
 

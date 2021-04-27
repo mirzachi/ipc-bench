@@ -17,7 +17,7 @@ void setup_ignored_signals(struct sigaction *signal_action, int flags) {
 	if (!(flags & BLOCK_USR1)) {
 		// Set signal handler
 		if (sigaction(SIGUSR1, signal_action, NULL)) {
-			throw("Error registering SIGUSR1 signal handler for server");
+			throwError("Error registering SIGUSR1 signal handler for server");
 		}
 	}
 
@@ -25,7 +25,7 @@ void setup_ignored_signals(struct sigaction *signal_action, int flags) {
 	if (!(flags & BLOCK_USR2)) {
 		// Set signal handler
 		if (sigaction(SIGUSR2, signal_action, NULL)) {
-			throw("Error registering SIGUSR2 signal handler for server");
+			throwError("Error registering SIGUSR2 signal handler for server");
 		}
 	}
 }
