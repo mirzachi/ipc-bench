@@ -73,5 +73,5 @@ endif()
 
 if (nanomsg_FOUND)
 	add_subdirectory(nanomsg)
-	#add_subdirectory(libnanomsg-sub)
+	add_subdirectory(nanomsg-sub)
 endif()
