@@ -16,6 +16,8 @@ ExternalProject_Add(
         GIT_REPOSITORY https://github.com/nanomsg/nng.git
         GIT_TAG v${nng_VERSION}
         CMAKE_ARGS
+        -DBUILD_SHARED_LIBS=ON
+        -DNNG_TESTS=OFF
         -DCMAKE_BUILD_TYPE=Release
         -DCMAKE_PREFIX_PATH=${LOCAL_INSTALL_DIR}
         -DCMAKE_INSTALL_PREFIX=${LOCAL_INSTALL_DIR}

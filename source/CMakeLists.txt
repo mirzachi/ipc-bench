@@ -15,11 +15,13 @@ else()
 endif()
 
 link_libraries(pthread)
+link_libraries(rt)
 
 ###########################################################
 ## DEPENDENCIES
 ###########################################################
 
+## pthread
 find_package(Threads REQUIRED)
 
 ## ZMQ
@@ -58,15 +60,15 @@ endif()
 
 if (ZMQ_FOUND)
 	add_subdirectory(zeromq)
-	add_subdirectory(zeromq-sub)
+	#add_subdirectory(zeromq-sub)
 endif()
 
 if (nng_FOUND)
 	add_subdirectory(nng)
-	add_subdirectory(nng-sub)
+	#add_subdirectory(nng-sub)
 endif()
 
 if (nanomsg_FOUND)
-	add_subdirectory(libnanomsg)
-	add_subdirectory(libnanomsg-sub)
+	add_subdirectory(nanomsg)
+	#add_subdirectory(libnanomsg-sub)
 endif()
