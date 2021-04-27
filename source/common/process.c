@@ -9,34 +9,9 @@
 
 #include "common/utility.h"
 
+#ifndef BUILD_PATH
 #define BUILD_PATH "/build/source\0"
-
-char *find_build_path() {
-	char *path = (char *)malloc(strlen(__FILE__) + strlen(BUILD_PATH));
-	char *right;
-	char *left;
-
-	strcpy(path, __FILE__);
-	right = path + strlen(__FILE__);
-	left = right - strlen("ipc-bench");
-
-	// Make the string-comparison expected O(N)
-	// by only doing a string-comparison when
-	// the first and last character match
-	for (--right; left >= path; --left, --right) {
-		if (*left == 'i' && *right == 'h') {
-			if (strncmp("ipc-bench", left, 9) == 0) {
-				break;
-			}
-		}
-	}
-
-	// ++ because right is on the 'h'
-	strcpy(++right, BUILD_PATH);
-
-	return path;
-}
-
+#endif
 
 pid_t start_process(char *argv[]) {
 	// Will need to set the group id
@@ -83,7 +58,7 @@ void start_children(char *prefix, int argc, char *argv[]) {
 	char server_name[100];
 	char client_name[100];
 
-	char *build_path = find_build_path();
+	char *build_path = BUILD_PATH;
 
 	// clang-format off
 	sprintf(
@@ -111,5 +86,4 @@ void start_children(char *prefix, int argc, char *argv[]) {
 	waitpid(c1_id, NULL, WUNTRACED);
 	waitpid(c2_id, NULL, WUNTRACED);
 
-	free(build_path);
 }

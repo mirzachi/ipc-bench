@@ -2,6 +2,9 @@
 ## CONFIGURATION
 ###########################################################
 
+# Injecting in process.c
+add_definitions(-DBUILD_PATH="${PROJECT_BINARY_DIR}/source")
+
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 add_compile_options(-g -O3 -Wall -Werror)
