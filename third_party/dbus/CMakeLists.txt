@@ -6,7 +6,7 @@ include(ExternalProject)
 # enable seeing GIT clone progress
 set(FETCHCONTENT_QUIET FALSE)
 
-# nanomsg version
+# dbus version
 set(dbus_VERSION 1.13.18)
 
 # download, configure, build and install the dependency
@@ -22,7 +22,7 @@ ExternalProject_Add(
         -DCMAKE_INSTALL_PREFIX=${LOCAL_INSTALL_DIR}
 )
 
-# nanomsg version
+# dbus-cxx version
 set(dbus-cxx_VERSION 0.12.0)
 
 # download, configure, build and install the dependency
