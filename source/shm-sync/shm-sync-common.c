@@ -18,10 +18,10 @@ void init_sync(struct Sync* sync) {
 	// with default values so that we must only change
 	// the one we are interested in.
 	if (pthread_mutexattr_init(&mutex_attributes) != 0) {
-		throw("Error initializing mutex attributes");
+		throwError("Error initializing mutex attributes");
 	}
 	if (pthread_condattr_init(&condition_attributes) != 0) {
-		throw("Error initializing condition variable attributes");
+		throwError("Error initializing condition variable attributes");
 	}
 
 	// Here we set the "process-shared"-attribute of the mutex
@@ -35,45 +35,45 @@ void init_sync(struct Sync* sync) {
 	// clang-format off
 	if (pthread_mutexattr_setpshared(
 				&mutex_attributes, PTHREAD_PROCESS_SHARED) != 0) {
-		throw("Error setting process-shared attribute for mutex");
+		throwError("Error setting process-shared attribute for mutex");
 	}
 
 	if (pthread_condattr_setpshared(
 				&condition_attributes, PTHREAD_PROCESS_SHARED) != 0) {
-		throw("Error setting process-shared attribute for condition variable");
+		throwError("Error setting process-shared attribute for condition variable");
 	}
 	// clang-format on
 
 	// Initialize the mutex and condition variable and pass the attributes
 	if (pthread_mutex_init(&sync->mutex, &mutex_attributes) != 0) {
-		throw("Error initializing mutex");
+		throwError("Error initializing mutex");
 	}
 	if (pthread_cond_init(&sync->condition, &condition_attributes) != 0) {
-		throw("Error initializing condition variable");
+		throwError("Error initializing condition variable");
 	}
 
 	// Destroy the attribute objects
 	if (pthread_mutexattr_destroy(&mutex_attributes)) {
-		throw("Error destroying mutex attributes");
+		throwError("Error destroying mutex attributes");
 	}
 	if (pthread_condattr_destroy(&condition_attributes)) {
-		throw("Error destroying condition variable attributes");
+		throwError("Error destroying condition variable attributes");
 	}
 }
 
 void destroy_sync(struct Sync* sync) {
 	if (pthread_mutex_destroy(&sync->mutex)) {
-		throw("Error destroying mutex");
+		throwError("Error destroying mutex");
 	}
 	if (pthread_cond_destroy(&sync->condition)) {
-		throw("Error destroying condition variable");
+		throwError("Error destroying condition variable");
 	}
 }
 
 void sync_wait(struct Sync* sync) {
 	// Lock the mutex
 	if (pthread_mutex_lock(&sync->mutex) != 0) {
-		throw("Error locking mutex");
+		throwError("Error locking mutex");
 	}
 
 	// Move into waiting for the condition variable to be signalled.
@@ -86,7 +86,7 @@ void sync_wait(struct Sync* sync) {
 	// and *re-acquires* the lock immediately. As such, when this method
 	// returns the lock will be owned by the calling thread.
 	if (pthread_cond_wait(&sync->condition, &sync->mutex) != 0) {
-		throw("Error waiting for condition variable");
+		throwError("Error waiting for condition variable");
 	}
 }
 
@@ -96,7 +96,7 @@ void sync_notify(struct Sync* sync) {
 	// to call pthread_cond_broadcast, in which case *all* waiting
 	// threads would be woken up.
 	if (pthread_cond_signal(&sync->condition) != 0) {
-		throw("Error signalling condition variable");
+		throwError("Error signalling condition variable");
 	}
 }
 
@@ -132,7 +132,7 @@ int create_segment(struct Arguments* args) {
 	segment_id = shmget(segment_key, size, IPC_CREAT | 0666);
 
 	if (segment_id < 0) {
-		throw("Error allocating segment");
+		throwError("Error allocating segment");
 	}
 
 	return segment_id;
@@ -160,7 +160,7 @@ shared memory. Children processes created with fork() inherit this segment.
 	shared_memory = shmat(segment_id, NULL, 0);
 
 	if (shared_memory < 0) {
-		throw("Could not attach segment");
+		throwError("Could not attach segment");
 	}
 
 	memset(shared_memory, 0, args->size);

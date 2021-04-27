@@ -81,7 +81,7 @@ int main(int argc, char* argv[]) {
 	segment_id = shmget(segment_key, 1 + args.size, IPC_CREAT | 0666);
 
 	if (segment_id < 0) {
-		throw("Could not get segment");
+		throwError("Could not get segment");
 	}
 
 	/*
@@ -104,7 +104,7 @@ int main(int argc, char* argv[]) {
 	shared_memory = (char*)shmat(segment_id, NULL, 0);
 
 	if (shared_memory < (char*)0) {
-		throw("Could not attach segment");
+		throwError("Could not attach segment");
 	}
 
 	communicate(shared_memory, &args);

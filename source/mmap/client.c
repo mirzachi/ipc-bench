@@ -15,7 +15,7 @@ int get_file_descriptor() {
 	int file_descriptor = open("/tmp/mmap", O_RDWR | O_CREAT, 0666);
 
 	if (file_descriptor < 0) {
-		throw("Error opening file!\n");
+		throwError("Error opening file!\n");
 	}
 
 	return file_descriptor;
@@ -92,7 +92,7 @@ int main(int argc, char* argv[]) {
 	// clang-format on
 
 	if (file_memory < 0) {
-		throw("Error mapping file!");
+		throwError("Error mapping file!");
 	}
 
 	/*
@@ -112,7 +112,7 @@ int main(int argc, char* argv[]) {
 
 	// Don't need the file descriptor anymore at this point
 	if (close(file_descriptor) < 0) {
-		throw("Error closing file!");
+		throwError("Error closing file!");
 	}
 
 	communicate(file_memory, &args);
@@ -121,7 +121,7 @@ int main(int argc, char* argv[]) {
 	// Actually unncessary because the OS will do
 	// this automatically when the process terminates
 	if (munmap(file_memory, args.size) < 0) {
-		throw("Error unmapping file!");
+		throwError("Error unmapping file!");
 	}
 
 	remove("/tmp/mmap");

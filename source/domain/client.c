@@ -20,14 +20,14 @@ void communicate(int connection, struct Arguments* args, int busy_waiting) {
 
 	for (; args->count > 0; --args->count) {
 		if (receive(connection, buffer, args->size, busy_waiting) == -1) {
-			throw("Error receiving on client-side");
+			throwError("Error receiving on client-side");
 		}
 
 		// Dummy operation
 		memset(buffer, '*', args->size);
 
 		if (send(connection, buffer, args->size, 0) == -1) {
-			throw("Error sending on client-side");
+			throwError("Error sending on client-side");
 		}
 	}
 
@@ -57,7 +57,7 @@ void setup_socket(int connection, int busy_waiting) {
 		// the timeout nor not blocking at all.
 		// adjust_socket_blocking_timeout(connection, 0, 1);
 		if (set_io_flag(connection, O_NONBLOCK) == -1) {
-			throw("Error setting socket to non-blocking on client-side");
+			throwError("Error setting socket to non-blocking on client-side");
 		}
 	}
 
@@ -81,7 +81,7 @@ void setup_socket(int connection, int busy_waiting) {
 	// clang-format on
 
 	if (return_code == -1) {
-		throw("Error connecting to server");
+		throwError("Error connecting to server");
 	}
 }
 
@@ -102,7 +102,7 @@ int create_connection(int busy_waiting) {
 	connection = socket(AF_UNIX, SOCK_STREAM, 0);
 
 	if (connection == -1) {
-		throw("Error opening socket on client-side");
+		throwError("Error opening socket on client-side");
 	}
 
 	setup_socket(connection, busy_waiting);

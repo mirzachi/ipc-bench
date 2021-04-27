@@ -25,7 +25,7 @@ void communicate(void* socket, struct Arguments* args) {
 
 		// Send data to the client
 		if (zmq_send(socket, buffer, args->size, 0) < args->size) {
-			throw("Error sending on server-side");
+			throwError("Error sending on server-side");
 		}
 		nanosleep(&ts, &ts);
 	}
@@ -56,7 +56,7 @@ void* create_socket(void* context, int use_tcp) {
 	// who thus passes ZMQ_REP, and one (or more) requesting nodes
 	// (the client), who passes ZMQ_REQ.
 	if ((socket = zmq_socket(context, ZMQ_PUB)) == NULL) {
-		throw("Error creating socket");
+		throwError("Error creating socket");
 	}
 
 	// no limit on the outbound queue
@@ -73,7 +73,7 @@ void* create_socket(void* context, int use_tcp) {
 	// In this case, we bind it to TCP port 6969. We could
 	// also bind it to a UNIX-domain socket, for example.
 	if (zmq_bind(socket, address) == -1) {
-		throw("Error binding socket to address");
+		throwError("Error binding socket to address");
 	}
 
 	free(option);
@@ -86,7 +86,7 @@ void* create_context() {
 	// Create a new zmq context, which is the
 	// main "control unit" for zmq.
 	if ((context = zmq_ctx_new()) == NULL) {
-		throw("Error creating ZMQ context");
+		throwError("Error creating ZMQ context");
 	}
 
 	return context;

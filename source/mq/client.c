@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include "common/common.h"
-#include "mq/mq-common.h"
+#include "mq-common.h"
 
 void communicate(int mq, struct Arguments* args) {
 	struct Message* message;
@@ -30,7 +30,7 @@ void communicate(int mq, struct Arguments* args) {
 		//    want *any* kind of message.
 		// 5. Flags, which we don't need.
 		if (msgrcv(mq, message, args->size, SERVER_MESSAGE, 0) < args->size) {
-			throw("Error receiving on client-side");
+			throwError("Error receiving on client-side");
 		}
 
 		message->type = CLIENT_MESSAGE;
@@ -41,7 +41,7 @@ void communicate(int mq, struct Arguments* args) {
 		// Note that msgsend only returns 0 on success, not the
 		// number of bytes, so we don't have to check for < args->size
 		if (msgsnd(mq, message, args->size, 0) == -1) {
-			throw("Error sending on client-side");
+			throwError("Error sending on client-side");
 		}
 	}
 
@@ -62,7 +62,7 @@ int create_mq() {
 	// and which we pass as first argument. 0666 are the
 	// read+write permissions for user, group and world.
 	if ((mq = msgget(key, 0666)) == -1) {
-		throw("Error retrieving message-queue on client-side");
+		throwError("Error retrieving message-queue on client-side");
 	}
 
 	return mq;

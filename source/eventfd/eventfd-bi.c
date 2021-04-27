@@ -11,7 +11,7 @@
 
 void eventfd_notify(int descriptor, uint64_t value) {
 	if (write(descriptor, &value, 8) == -1) {
-		throw("Error writing to eventfd");
+		throwError("Error writing to eventfd");
 	}
 }
 
@@ -26,7 +26,7 @@ void eventfd_wait(int descriptor, uint64_t wanted) {
 		// is *always* 1 and the stored value is decremented by
 		// 1 (not reset to zero).
 		if (read(descriptor, &stored, 8) == -1) {
-			throw("Error reading from eventfd");
+			throwError("Error reading from eventfd");
 		}
 
 		if (stored == wanted) {
@@ -37,7 +37,7 @@ void eventfd_wait(int descriptor, uint64_t wanted) {
 		// (e.g. if the server read the signal it set)
 		// then write it back.
 		if (write(descriptor, &stored, 8) == -1) {
-			throw("Error writing back to eventfd");
+			throwError("Error writing back to eventfd");
 		}
 	}
 }
@@ -77,7 +77,7 @@ void communicate(int descriptor, struct Arguments* args) {
 
 	// Fork a child process
 	if ((pid = fork()) == -1) {
-		throw("Error forking process");
+		throwError("Error forking process");
 	}
 
 	// fork() returns 0 for the child process

@@ -32,7 +32,7 @@ void communicate(nng_socket* socket, struct Arguments* args) {
 
 		if ( rv != 0) {
 			printf("rv: %i", rv);
-			throw("Error sending on server-side");
+			throwError("Error sending on server-side");
 		}
 		//printf("%i\n", message);
 		nanosleep(&ts, &ts);

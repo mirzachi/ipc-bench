@@ -65,7 +65,7 @@ int get_address(struct addrinfo *server_info) {
 
 	// If we didn't actually find a valid address
 	if (iterator == NULL) {
-		throw("Error finding valid address!");
+		throwError("Error finding valid address!");
 	}
 
 	// Return the valid address info
@@ -86,7 +86,7 @@ void communicate(int descriptor, struct Arguments *args, int busy_waiting) {
 	for (; args->count > 0; --args->count) {
 		// Receive data
 		if (receive(descriptor, buffer, args->size, busy_waiting) == -1) {
-			throw("Error receiving data on client-side");
+			throwError("Error receiving data on client-side");
 		}
 
 		// Dummy operation
@@ -94,7 +94,7 @@ void communicate(int descriptor, struct Arguments *args, int busy_waiting) {
 
 		// Send data back
 		if (send(descriptor, buffer, args->size, 0) == -1) {
-			throw("Error sending data on client-side");
+			throwError("Error sending data on client-side");
 		}
 	}
 
@@ -142,7 +142,7 @@ void setup_socket(int socket_descriptor, int busy_waiting) {
 	if (busy_waiting) {
 		// adjust_socket_blocking_timeout(socket_descriptor, 0, 10);
 		if (set_io_flag(socket_descriptor, O_NONBLOCK) == -1) {
-			throw("Error setting socket to non-blocking on client-side");
+			throwError("Error setting socket to non-blocking on client-side");
 		}
 	}
 }

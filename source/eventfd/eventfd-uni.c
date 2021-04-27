@@ -16,7 +16,7 @@ void client_communicate(int descriptor, struct Arguments* args) {
 		// eventfd to the value in the 8-byte buffer passed.
 		// Here we send the current timestamp to the server
 		if (write(descriptor, &timestamp, 8) == -1) {
-			throw("Error writing to eventfd");
+			throwError("Error writing to eventfd");
 		}
 	}
 }
@@ -40,7 +40,7 @@ void server_communicate(int descriptor, struct Arguments* args) {
 		// to zero). Here we read the start timestamp into the
 		// benchmark object.
 		if (read(descriptor, &bench.single_start, 8) == -1) {
-			throw("Error reading from eventfd");
+			throwError("Error reading from eventfd");
 		}
 		benchmark(&bench);
 	}
@@ -57,7 +57,7 @@ void communicate(int descriptor, struct Arguments* args) {
 
 	// Fork a child process
 	if ((pid = fork()) == -1) {
-		throw("Error forking process");
+		throwError("Error forking process");
 	}
 
 	// fork() returns 0 for the child process

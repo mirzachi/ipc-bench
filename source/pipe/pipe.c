@@ -17,7 +17,7 @@ FILE *open_stream(int file_descriptor[2], int to_open) {
 	stream = fdopen(file_descriptor[to_open], mode);
 
 	if (stream == NULL) {
-		throw("Could not open stream for reading");
+		throwError("Could not open stream for reading");
 	}
 
 	return stream;
@@ -39,7 +39,7 @@ void client_communicate(int file_descriptors[2], struct Arguments *args) {
 		wait_for_signal(&signal_action);
 
 		if (fread(buffer, args->size, 1, stream) == -1) {
-			throw("Error reading from pipe");
+			throwError("Error reading from pipe");
 		}
 
 		notify_server();
@@ -68,7 +68,7 @@ void server_communicate(int file_descriptors[2], struct Arguments *args) {
 		bench.single_start = now();
 
 		if (fwrite(buffer, args->size, 1, stream) == -1) {
-			throw("Error writing to pipe");
+			throwError("Error writing to pipe");
 		}
 		// Send immediately
 		fflush(stream);
@@ -91,7 +91,7 @@ void communicate(int file_descriptors[2], struct Arguments *args) {
 
 	// Fork a child process
 	if ((pid = fork()) == -1) {
-		throw("Error forking process");
+		throwError("Error forking process");
 	}
 
 	// fork() returns 0 for the child process
@@ -122,7 +122,7 @@ int main(int argc, char *argv[]) {
 	// the current process and any children it spawns. This is
 	// mainly what distinguishes pipes from FIFOs (named pipes)
 	if (pipe(file_descriptors) < 0) {
-		throw("Error opening pipe!\n");
+		throwError("Error opening pipe!\n");
 	}
 
 	communicate(file_descriptors, &args);

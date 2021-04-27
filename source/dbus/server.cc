@@ -1,20 +1,24 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
+#include <cstdlib>
 #include <dbus-cxx.h>
 #include <vector>
-#include <iostream>
+#include <atomic>
 
-
-std::vector<int> test(std::vector<int> buffer) {
-
-    std::cout << "test" << std::endl;
-    return buffer;
+extern "C" {
+#include "common/common.h"
 }
 
-int main(int argc, char* argv[]) {
-    int ret;
+std::atomic<int> counter = 0;
+
+std::vector<int> communicate(std::vector<int> msg) {
+    counter++;
+    return msg;
+}
+
+int main(int argc, char *argv[]) {
+
+    Arguments args;
+
+    parse_arguments(&args, argc, argv);
 
     DBus::init();
 
@@ -23,15 +27,20 @@ int main(int argc, char* argv[]) {
     DBus::Connection::pointer conn =
             dispatcher->create_connection(DBus::BUS_SESSION);
 
-    ret = conn->request_name("dbuscxx.quickstart_0.server",
-                             DBUS_NAME_FLAG_REPLACE_EXISTING);
+    auto ret = conn->request_name("dbuscxx.quickstart_0.server",
+                                  DBUS_NAME_FLAG_REPLACE_EXISTING);
     if (DBUS_REQUEST_NAME_REPLY_PRIMARY_OWNER != ret) return 1;
 
     DBus::Object::pointer object = conn->create_object("/dbuscxx/quickstart_0");
 
-    object->create_method<std::vector<int>, std::vector<int>>("dbuscxx.Quickstart", "test", sigc::ptr_fun(test));
+    object->create_method<std::vector<int>, std::vector<int>>("dbuscxx.Quickstart", "communicate",
+                                                              sigc::ptr_fun(communicate));
 
-    sleep(10);
+    // wait until all messages have been returned
+    while (counter < args.count) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    }
 
     return EXIT_SUCCESS;
 }
+

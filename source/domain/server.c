@@ -14,7 +14,7 @@ void cleanup(int connection, void* buffer) {
 	close(connection);
 	free(buffer);
 	if (remove(SOCKET_PATH) == -1) {
-		throw("Error removing domain socket");
+		throwError("Error removing domain socket");
 	}
 }
 
@@ -30,13 +30,13 @@ void communicate(int connection, struct Arguments* args, int busy_waiting) {
 		bench.single_start = now();
 
 		if (send(connection, buffer, args->size, 0) < args->size) {
-			throw("Error sending on server-side");
+			throwError("Error sending on server-side");
 		}
 
 		memset(buffer, '*', args->size);
 
 		if (receive(connection, buffer, args->size, busy_waiting) == -1) {
-			throw("Error receiving on server-side");
+			throwError("Error receiving on server-side");
 		}
 
 		benchmark(&bench);
@@ -82,14 +82,14 @@ void setup_socket(int socket_descriptor) {
 	// clang-format on
 
 	if (return_code == -1) {
-		throw("Error binding socket to address");
+		throwError("Error binding socket to address");
 	}
 
 	// Enable listening on this socket
 	return_code = listen(socket_descriptor, 10);
 
 	if (return_code == -1) {
-		throw("Could not start listening on socket");
+		throwError("Could not start listening on socket");
 	}
 }
 
@@ -107,7 +107,7 @@ int create_socket() {
 	socket_descriptor = socket(AF_UNIX, SOCK_STREAM, 0);
 
 	if (socket_descriptor == -1) {
-		throw("Error opening socket on server-side");
+		throwError("Error opening socket on server-side");
 	}
 
 	setup_socket(socket_descriptor);
@@ -135,7 +135,7 @@ int accept_connection(int socket_descriptor, int busy_waiting) {
 	// clang-format on
 
 	if (connection == -1) {
-		throw("Error accepting connection");
+		throwError("Error accepting connection");
 	}
 
 	set_socket_both_buffer_sizes(connection);
@@ -143,7 +143,7 @@ int accept_connection(int socket_descriptor, int busy_waiting) {
 	if (busy_waiting) {
 		// adjust_socket_blocking_timeout(connection, 0, 1);
 		if (set_io_flag(connection, O_NONBLOCK) == -1) {
-			throw("Error setting socket to non-blocking on server-side");
+			throwError("Error setting socket to non-blocking on server-side");
 		}
 	}
 

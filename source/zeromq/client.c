@@ -23,12 +23,12 @@ void communicate(void* socket, struct Arguments* args) {
 
 		// Send data to the server (flags = 0)
 		if (zmq_send(socket, buffer, args->size, 0) < args->size) {
-			throw("Error sending on client-side");
+			throwError("Error sending on client-side");
 		}
 
 		// Receive data from the server
 		if (zmq_recv(socket, buffer, args->size, 0) < args->size) {
-			throw("Error receiving on client-side");
+			throwError("Error receiving on client-side");
 		}
 
 		benchmark(&bench);
@@ -61,7 +61,7 @@ void* create_socket(void* context, int use_tcp) {
 	// who thus passes ZMQ_REP, and one (or more) requesting nodes
 	// (the client), who passes ZMQ_REQ.
 	if ((socket = zmq_socket(context, ZMQ_REQ)) == NULL) {
-		throw("Error creating socket");
+		throwError("Error creating socket");
 	}
 
 	address = use_tcp ? "tcp://localhost:6969" : "ipc:///tmp/zmq_ipc";
@@ -72,7 +72,7 @@ void* create_socket(void* context, int use_tcp) {
 	// our connection, in this case a TCP port on localhost
 	// with port 6969.
 	if (zmq_connect(socket, address) == -1) {
-		throw("Error binding socket to address");
+		throwError("Error binding socket to address");
 	}
 
 	return socket;
@@ -84,7 +84,7 @@ void* create_context() {
 	// Create a new zmq context, which is the
 	// main "control unit" for zmq.
 	if ((context = zmq_ctx_new()) == NULL) {
-		throw("Error creating ZMQ context");
+		throwError("Error creating ZMQ context");
 	}
 
 	return context;

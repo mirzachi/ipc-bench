@@ -25,7 +25,7 @@ void communicate(FILE *stream,
 		wait_for_signal(signal_action);
 
 		if (fread(buffer, args->size, 1, stream) == 0) {
-			throw("Error reading buffer");
+			throwError("Error reading buffer");
 		}
 
 		notify_server();
@@ -45,7 +45,7 @@ FILE *open_fifo(struct sigaction *signal_action) {
 	// Note that this call will block until the write-end
 	// is opened by the server
 	if ((stream = fopen(FIFO_PATH, "r")) == NULL) {
-		throw("Error opening stream to FIFO on client-side");
+		throwError("Error opening stream to FIFO on client-side");
 	}
 
 	return stream;

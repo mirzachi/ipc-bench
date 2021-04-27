@@ -5,7 +5,7 @@
 #include <sys/types.h>
 
 #include "common/common.h"
-#include "mq/mq-common.h"
+#include "mq-common.h"
 
 void cleanup(int mq, struct Message* message) {
 	// Destroy the message queue.
@@ -14,7 +14,7 @@ void cleanup(int mq, struct Message* message) {
 	// options and other information, can be set to
 	// NULL for the purpose of removing the queue.
 	if (msgctl(mq, IPC_RMID, NULL) == -1) {
-		throw("Error removing message queue");
+		throwError("Error removing message queue");
 	}
 
 	free(message);
@@ -43,7 +43,7 @@ void communicate(int mq, struct Arguments* args) {
 		// Same parameters as msgrcv, but no message-type
 		// (because it is determined by the message's member)
 		if (msgsnd(mq, message, args->size, IPC_NOWAIT) == -1) {
-			throw("Error sending on server-side");
+			throwError("Error sending on server-side");
 		}
 
 		// Fetch a message from the queue.
@@ -66,7 +66,7 @@ void communicate(int mq, struct Arguments* args) {
 		//    such a message is available in the queue.
 		// 5. Flags, which we don't need.
 		if (msgrcv(mq, message, args->size, CLIENT_MESSAGE, 0) < args->size) {
-			throw("Error receiving on server-side");
+			throwError("Error receiving on server-side");
 		}
 
 		benchmark(&bench);
@@ -93,7 +93,7 @@ int create_mq() {
 	// 0666 are the read+write permissions for user,
 	// group and world.
 	if ((mq = msgget(key, IPC_CREAT | 0666)) == -1) {
-		throw("Error creating message-queue on server-side");
+		throwError("Error creating message-queue on server-side");
 	}
 
 	// Tell the client it can now get the queue

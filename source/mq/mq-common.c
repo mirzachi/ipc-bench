@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include "common/arguments.h"
-#include "mq/mq-common.h"
+#include "mq-common.h"
 
 struct Message* create_message(struct Arguments* args) {
 	struct Message* message;

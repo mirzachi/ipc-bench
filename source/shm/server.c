@@ -101,7 +101,7 @@ int main(int argc, char* argv[]) {
 	segment_id = shmget(segment_key, 1 + args.size, IPC_CREAT | 0666);
 
 	if (segment_id < 0) {
-		throw("Error allocating segment");
+		throwError("Error allocating segment");
 	}
 
 	/*
@@ -124,7 +124,7 @@ int main(int argc, char* argv[]) {
 	shared_memory = (char*)shmat(segment_id, NULL, 0);
 
 	if (shared_memory == (char*)-1) {
-		throw("Error attaching segment");
+		throwError("Error attaching segment");
 	}
 
 	communicate(shared_memory, &args);

@@ -49,7 +49,7 @@ void handle_blocking(int socket_descriptor) {
 	// clang-format on
 
 	if (return_code == -1) {
-		throw("Error reclaiming socket");
+		throwError("Error reclaiming socket");
 	}
 }
 
@@ -126,7 +126,7 @@ void setup_socket(int socket_descriptor, int busy_waiting) {
 		// does make it faster than plain busy waiting, though.)
 		// adjust_socket_blocking_timeout(socket_descriptor, 0, 10);
 		if (set_io_flag(socket_descriptor, O_NONBLOCK) == -1) {
-			throw("Error setting socket to non-blocking on server-side");
+			throwError("Error setting socket to non-blocking on server-side");
 		}
 	}
 }
@@ -159,7 +159,7 @@ int accept_communication(int socket_descriptor, int busy_waiting) {
 	// clang-format on
 
 	if (connection == -1) {
-		throw("Error accepting");
+		throwError("Error accepting");
 	}
 
 	setup_socket(connection, busy_waiting);
@@ -185,12 +185,12 @@ void communicate(int descriptor, struct Arguments *args, int busy_waiting) {
 
 		// Send to the client
 		if (send(descriptor, buffer, args->size, 0) == -1) {
-			throw("Error sending from server");
+			throwError("Error sending from server");
 		}
 
 		// Read from client
 		if (receive(descriptor, buffer, args->size, busy_waiting) == -1) {
-			throw("Error receving from server");
+			throwError("Error receving from server");
 		}
 
 		benchmark(&bench);
@@ -280,7 +280,7 @@ int create_socket() {
 
 	// If we didn't actually find a valid address
 	if (valid_address == NULL) {
-		throw("Error finding valid address");
+		throwError("Error finding valid address");
 	}
 
 	// Now that we have a socket and an address bound to it, we
@@ -290,7 +290,7 @@ int create_socket() {
 	// accepts them (the OS limit is often between 10 and 20)
 
 	if (listen(socket_descriptor, 10) == 1) {
-		throw("Error listening on given socket!");
+		throwError("Error listening on given socket!");
 	}
 
 	return socket_descriptor;

@@ -13,7 +13,7 @@ void cleanup(FILE* stream, void* buffer) {
 	free(buffer);
 	fclose(stream);
 	if (remove(FIFO_PATH) == -1) {
-		throw("Error removing FIFO");
+		throwError("Error removing FIFO");
 	}
 }
 
@@ -33,7 +33,7 @@ void communicate(FILE* stream,
 		bench.single_start = now();
 
 		if (fwrite(buffer, args->size, 1, stream) == 0) {
-			throw("Error writing buffer");
+			throwError("Error writing buffer");
 		}
 		// Send off immediately (for small buffers)
 		fflush(stream);
@@ -61,7 +61,7 @@ FILE* open_fifo() {
 	// c i/o functions. 0666 specifies read+write
 	// access permissions for the user, group and world
 	if (mkfifo(FIFO_PATH, 0666) > 0) {
-		throw("Error creating FIFO");
+		throwError("Error creating FIFO");
 	}
 
 	// Tell the client the fifo now exists and
@@ -73,7 +73,7 @@ FILE* open_fifo() {
 	// Note that this call will block until the read-end
 	// is opened by the client
 	if ((stream = fopen(FIFO_PATH, "w")) == NULL) {
-		throw("Error opening descriptor to FIFO on server side");
+		throwError("Error opening descriptor to FIFO on server side");
 	}
 
 	return stream;
