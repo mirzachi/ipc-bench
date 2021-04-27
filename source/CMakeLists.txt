@@ -68,7 +68,7 @@ endif()
 
 if (nng_FOUND)
 	add_subdirectory(nng)
-	#add_subdirectory(nng-sub)
+	add_subdirectory(nng-sub)
 endif()
 
 if (nanomsg_FOUND)
