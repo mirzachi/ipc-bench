@@ -61,9 +61,9 @@ if (NOT APPLE)
 	add_subdirectory(eventfd)
 endif()
 
-if (ZMQ_FOUND)
+if (ZeroMQ_FOUND)
 	add_subdirectory(zeromq)
-	#add_subdirectory(zeromq-sub)
+	add_subdirectory(zeromq-sub)
 endif()
 
 if (nng_FOUND)
