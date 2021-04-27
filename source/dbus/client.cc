@@ -1,43 +1,50 @@
-#include <stdlib.h>
+#include <cstdlib>
 #include <dbus-cxx.h>
 #include <vector>
-#include <iostream>
-#include <chrono>
 
-using namespace std::chrono;
-
-void communicate(DBus::ObjectProxy::pointer& object, char* argv[]) {
-
-	DBus::MethodProxy<std::vector<int>, std::vector<int>>& test_proxy
-			= *(object->create_method<std::vector<int>, std::vector<int>>("dbuscxx.Quickstart","test"));
-	std::vector<int> buffer;
-	buffer.reserve(8192);
-
-	auto start = high_resolution_clock::now();
-	for (int i = 0; i < 10000; i++) {
-		std::cout << "Proxy invocation" << std::endl;
-		buffer = test_proxy(buffer);
-	}
-	auto stop = high_resolution_clock::now();
-	auto duration = duration_cast<microseconds>(stop - start);
-	std::cout << duration.count() << std::endl;
+extern "C" {
+#include "common/common.h"
 }
 
-int main(int argc, char* argv[]) {
-	DBus::init();
+void communicate(DBus::ObjectProxy::pointer &object, Arguments *args) {
 
-	DBus::Dispatcher::pointer dispatcher;
-	dispatcher = DBus::Dispatcher::create();
+    Benchmarks bench;
 
-	DBus::Connection::pointer connection;
-	connection = dispatcher->create_connection( DBus::BUS_SESSION );
+    DBus::MethodProxy<std::vector<int>, std::vector<int>> &communicateProxy
+            = *(object->create_method<std::vector<int>, std::vector<int>>("dbuscxx.Quickstart", "communicate"));
+    std::vector<int> msg;
+    msg.reserve(args->size);
 
-	// create an object proxy, which stands in for a real object.
-	// a proxy exists over the dbus
-	DBus::ObjectProxy::pointer object;
-	object = connection->create_object_proxy("dbuscxx.quickstart_0.server", "/dbuscxx/quickstart_0");
+    setup_benchmarks(&bench);
 
-	communicate(object, argv);
+    for (int i = 0; i < args->count; i++) {
+        bench.single_start = now();
+        msg = communicateProxy(msg);
+        benchmark(&bench);
+    }
+    evaluate(&bench, args);
+}
 
-	return EXIT_SUCCESS;
+int main(int argc, char *argv[]) {
+
+    Arguments args;
+
+    parse_arguments(&args, argc, argv);
+
+    DBus::init();
+
+    DBus::Dispatcher::pointer dispatcher;
+    dispatcher = DBus::Dispatcher::create();
+
+    DBus::Connection::pointer connection;
+    connection = dispatcher->create_connection(DBus::BUS_SESSION);
+
+    // create an object proxy, which stands in for a real object.
+    // a proxy exists over the dbus
+    DBus::ObjectProxy::pointer object;
+    object = connection->create_object_proxy("dbuscxx.quickstart_0.server", "/dbuscxx/quickstart_0");
+
+    communicate(object, &args);
+
+    return EXIT_SUCCESS;
 }
