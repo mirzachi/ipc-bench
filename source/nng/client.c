@@ -14,11 +14,11 @@ void communicate(nng_socket* socket, struct Arguments* args) {
 	for (; args->count > 0; --args->count) {
 		// Send data to the server (flags = 0)
 		if (nng_send(*socket, buffer, sz, 0) != 0) {
-			printf("nng_send");
+			printf("nng_send\n");
 		}
 
 		if (nng_recv(*socket, buffer, &(sz), 0) != 0) {
-			printf("nng_recv");
+			printf("nng_recv\n");
 		}
 
 	}
@@ -41,7 +41,7 @@ nng_socket* create_socket() {
 	rv = NNG_ECONNREFUSED;
 	while(rv == NNG_ECONNREFUSED) {
 		if ((rv = nng_dial(*socket, "ipc:///tmp/nng_ipc", NULL, 0)) != 0) {
-			printf("nng_dial");
+			printf("nng_dial\n");
 		}
 		nng_msleep(50);
 	}
