@@ -3,6 +3,10 @@
 A sample implementations and benchmarks for various inter-process-communication (IPC) methods on Linux and OS X.
 Furthermore, additional commonly used communication libraries that provide ipc functionality are benchmarked as well.
 
+## Results
+
+![alt text](results/benchmark.png "Throughput")
+
 ## Spectrum
 
 The following IPC methods are implemented.
