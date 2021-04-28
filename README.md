@@ -1,58 +1,31 @@
 # IPC-Bench
 
-A sample implementations and benchmarks for various inter-process-communication (IPC) methods on Linux and OS X.
-Furthermore, additional commonly used communication libraries that provide ipc functionality are benchmarked as well.
+A sample implementations and benchmarks for various inter-process-communication (IPC) mechanisms and libraries on Linux.
 
-## Results
+*source* folder contains the mechanisms that can be benchmarked.
 
-![alt text](results/benchmark.png "Throughput")
-
-## Spectrum
-
-The following IPC methods are implemented.
 To measure their sequential throughput we send a single message forth _and_ back (i.e., *ping pong*) between two processes.
 
-| Method                  |         100 Byte Messages |       1 Kilo Byte Messages |
-| ----------------------- | -------------------------:| --------------------------:|
-| Unix Signals            |                --broken-- |                 --broken-- |
-| zeromq                  |              24,901 msg/s |               22,679 msg/s |
-| Internet sockets (TCP)  |              70,221 msg/s |               67,901 msg/s |
-| Domain sockets          |             130,372 msg/s |              127,582 msg/s |
-| Pipes                   |             162,441 msg/s |              155,404 msg/s |
-| Message Queues          |             232,253 msg/s |              213,796 msg/s |
-| FIFOs (named pipes)     |             265,823 msg/s |              254,880 msg/s |
-| Shared Memory           |           4,702,557 msg/s |            1,659,291 msg/s |
-| Memory-Mapped Files     |           5,338,860 msg/s |            1,701,759 msg/s |
-
-###### Benchmarked on ``Intel(R) Core(TM) i5-4590S CPU @ 3.00GHz`` running ``Ubuntu 20.04.1 LTS``.
-
-**NOTE**: The code is rather old and probably not all configurations are ideal!
-We are happy to update the configuration with concrete suggestions (see contributions below).
-In particular, ``zeromq`` is a great library and should probable be performing better.
-In addition, there is little technical reason for shared memory to perform differently than memory-mapped files (could be due to a lack of warmup).
-Non-the-less, hopefully, this benchmark can serve as a solid starting point by providing ball-park numbers and a reference implementation.
-
-For a detailed evaluation of inter-node communication, see our [L5 library](https://github.com/pfent/L5RDMA).
 
 ## Usage
 
 Some required packages on Ubuntu:
 ```shell
-sudo apt-get install pkg-config, libzmqpp-dev
+sudo apt-get install pkg-config
 ```
 
 You can build the project and all necessary executables using CMake. The following commands (executed from the root folder) should do the trick:
 
 ```shell
-mkdir build
-cd build
-cmake ..
-make
+./build-dependencies.sh
+mkdir cmake-build-debug
+cmake -B cmake-build-debug -S . -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH=temp/third_party/install
+cmake --build cmake-build-debug --parallel 8
 ```
 
-This will generate a `build/source` folder, holding further directories for each IPC type.
+This will generate a `cmake-build-debug/source` folder, holding further directories for each IPC type.
 Simply execute the program named after the folder, e.g. `build/source/shm/shm`.
-Where applicable, this will start a new server and client process, run benchmarks and print results to `stdout`. For example, running `build/source/shm/shm` outputs:
+Where applicable, this will start a new server and client process, run benchmarks and print results to `stdout`. For example, running `cmake-build-debug/source/shm/shm` outputs:
 
 ```
 ============ RESULTS ================
@@ -78,8 +51,16 @@ For example, you can measure the latency of sending 100 bytes a million times vi
 $ ./domain -c 1000000 -s 100
 ```
 
-We also provide a shell script under `results/` that runs all methods with various configurations and stores the results.
+We also provide a Python script under `benchmark.py` that runs configured mechanisms with various configurations and stores the results.
 Some tests may have issues due to system limits, so you may want to re-run the script or run some tests manually.
+
+*plotBenchmarks.py* script can be configured to plot the throughput results from the *benchmark.py* script.
+
+## Sample Results
+
+Absolute numbers will vary across different systems.
+
+![alt text](results/benchmark.png "Throughput")
 
 ## Contributions
 
