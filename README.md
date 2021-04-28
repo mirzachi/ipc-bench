@@ -11,13 +11,13 @@ To measure their sequential throughput we send a single message forth _and_ back
 
 Some required packages on Ubuntu:
 ```shell
-sudo apt-get install pkg-config
+sudo apt-get install libexpat-dev libsigc++-2.0-dev m4 pkg-config python3-pip
 ```
 
 You can build the project and all necessary executables using CMake. The following commands (executed from the root folder) should do the trick:
 
 ```shell
-./build-dependencies.sh
+./install-dependencies.sh
 mkdir cmake-build-debug
 cmake -B cmake-build-debug -S . -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH=temp/third_party/install
 cmake --build cmake-build-debug --parallel 8
@@ -43,7 +43,7 @@ Message rate:       514138     	msg/s
 To control the number of messages sent and the size of each message, each master executable (which stars the server and client) takes two optional command-line arguments:
 
 * `-c <count>`: How many messages to send between the server and client. Defaults to 1000.
-* `-s <size>`: The size of individual messages. Defaults to 1000.
+* `-s <size>`: The size of individual messages. Defaults to 4096.
 
 For example, you can measure the latency of sending 100 bytes a million times via domain sockets with the following command:
 
