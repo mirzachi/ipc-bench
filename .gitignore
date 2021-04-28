@@ -101,5 +101,6 @@ output/
 .idea/*
 cmake-build-debug
 temp/*
+log
 
 
