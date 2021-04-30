@@ -24,7 +24,7 @@ cmake --build cmake-build-debug --parallel 8
 ```
 
 This will generate a `cmake-build-debug/source` folder, holding further directories for each IPC type.
-Simply execute the program named after the folder, e.g. `build/source/shm/shm`.
+Simply execute the program named after the folder, e.g. `cmake-build-debug/source/shm/shm`.
 Where applicable, this will start a new server and client process, run benchmarks and print results to `stdout`. For example, running `cmake-build-debug/source/shm/shm` outputs:
 
 ```

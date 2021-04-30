@@ -9,7 +9,7 @@ technologies = ("shm", "mmap", "domain", "fifo", "tcp", "zeromq", "nanomsg", "nn
 # Messages to send in one iteration
 count = 1000
 # Number of iterations
-iterationsPerScenario = 1
+iterationsPerScenario = 100 
 # Message sizes for sending
 packetSizes = (1, 10, 100, 1000, 10000)
 # Build folder of the benchmark executables
